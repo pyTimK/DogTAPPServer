@@ -18,14 +18,15 @@ export class AppController {
 
   @Get()
   async getHello() {
-    let data:string = '';
+    let data: string = '';
     await admin
       .firestore()
       .collection('dog')
       .get()
       .then((snapshot) => {
         snapshot.forEach((doc) => {
-          data = doc.data() + ' ';
+          console.log(doc.id, '=>', doc.data());
+          data += doc.id;
         });
       });
     return data;
