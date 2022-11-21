@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { AppService } from './app.service';
 import * as admin from 'firebase-admin';
 const {
@@ -16,19 +16,17 @@ const {
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get(
-    '/:altitude/:latitude/:longitude/:year/:month/:day/:hour/:minute/:second',
-  )
+  @Get('')
   async getHello(
-    @Param('altitude') altitude: number,
-    @Param('latitude') latitude: number,
-    @Param('longitude') longitude: number,
-    @Param('year') year: number,
-    @Param('month') month: number,
-    @Param('day') day: number,
-    @Param('hour') hour: number,
-    @Param('minute') minute: number,
-    @Param('second') second: number,
+    @Query('altitude') altitude: number,
+    @Query('latitude') latitude: number,
+    @Query('longitude') longitude: number,
+    @Query('year') year: number,
+    @Query('month') month: number,
+    @Query('day') day: number,
+    @Query('hour') hour: number,
+    @Query('minute') minute: number,
+    @Query('second') second: number,
   ) {
     let data: string = '';
     await admin
@@ -52,7 +50,7 @@ export class AppController {
       minute,
       second,
     );
-    return data;
+    return altitude;
     // return this.appService.getHello();
   }
 }
