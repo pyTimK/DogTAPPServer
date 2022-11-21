@@ -12,6 +12,8 @@ const {
   FieldValue,
 } = require('firebase-admin/firestore');
 
+const tempDogId = '68koHQBo46DErlaJJrNf';
+
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
@@ -31,14 +33,33 @@ export class AppController {
     let data: string = '';
     await admin
       .firestore()
-      .collection('dog')
-      .get()
-      .then((snapshot) => {
-        snapshot.forEach((doc) => {
-          console.log(doc.id, '=>', doc.data());
-          data += doc.id;
-        });
+      .collection('record')
+      .doc(tempDogId)
+      .collection('date')
+      .doc(
+        `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day}`,
+      )
+      .collection('location')
+      .doc(
+        `${hour < 10 ? '0' : ''}${hour}:${minute < 10 ? '0' : ''}${minute}:${
+          second < 10 ? '0' : ''
+        }${second}`,
+      )
+      .set({
+        altitude,
+        latitude,
+        longitude,
+        timestamp: Timestamp.fromDate(
+          new Date(year, month, day, hour, minute, second),
+        ),
       });
+    // .add.get()
+    // .then((snapshot) => {
+    //   snapshot.forEach((doc) => {
+    //     console.log(doc.id, '=>', doc.data());
+    //     data += doc.id;
+    //   });
+    // });
     console.log(
       altitude,
       latitude,
