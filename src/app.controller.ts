@@ -1,6 +1,15 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import {
+  CACHE_MANAGER,
+  Controller,
+  Get,
+  Inject,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 import * as admin from 'firebase-admin';
+import { Cache } from 'cache-manager';
 const {
   initializeApp,
   applicationDefault,
@@ -12,11 +21,14 @@ const {
   FieldValue,
 } = require('firebase-admin/firestore');
 
-const tempDogId = '68koHQBo46DErlaJJrNf';
+// const tempDogId = '68koHQBo46DErlaJJrNf';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+  ) {}
 
   @Get('')
   async getHello(
@@ -31,10 +43,13 @@ export class AppController {
     @Query('second') second: number,
   ) {
     let data: string = '';
+    const dogId =
+      ((await this.cacheManager.get('dogId')) as string) ??
+      '68koHQBo46DErlaJJrNf';
     await admin
       .firestore()
       .collection('record')
-      .doc(tempDogId)
+      .doc(dogId)
       .collection('date')
       .doc(
         `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day}`,
@@ -73,5 +88,11 @@ export class AppController {
     );
     return altitude;
     // return this.appService.getHello();
+  }
+
+  @Post('changeDogId')
+  async changeDogId(@Query('dogId') dogId: string) {
+    await this.cacheManager.set('dogId', dogId, 0);
+    return dogId;
   }
 }
