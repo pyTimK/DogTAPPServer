@@ -30,6 +30,11 @@ export class AppController {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
+  @Get('hi')
+  getHi() {
+    return 'UOUOUO';
+  }
+
   @Get('')
   async getHello(
     @Query('altitude') altitude: number,
@@ -43,6 +48,7 @@ export class AppController {
     @Query('second') second: number,
   ) {
     let data: string = '';
+    // console.log(`DogId: ${await this.cacheManager.get('dogId')}`);
     const dogId =
       ((await this.cacheManager.get('dogId')) as string) ??
       '68koHQBo46DErlaJJrNf';
