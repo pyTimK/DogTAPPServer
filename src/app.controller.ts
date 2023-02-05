@@ -10,7 +10,7 @@ import {
 import { AppService } from './app.service';
 import * as admin from 'firebase-admin';
 import { Cache } from 'cache-manager';
-import { FileService } from './file.service';
+import { FileService } from './file/file.service';
 
 const {
   initializeApp,
