@@ -105,7 +105,9 @@ export class AppController {
 
   @Post('changeDogId')
   async changeDogId(@Query('dogId') dogId: string) {
+    console.log(await this.cacheManager.get('dogId'));
     await this.cacheManager.set('dogId', dogId, 0);
+    console.log(await this.cacheManager.get('dogId'));
     return dogId;
   }
 }
