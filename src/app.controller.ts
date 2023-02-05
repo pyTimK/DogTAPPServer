@@ -10,6 +10,8 @@ import {
 import { AppService } from './app.service';
 import * as admin from 'firebase-admin';
 import { Cache } from 'cache-manager';
+import { FileService } from './file.service';
+
 const {
   initializeApp,
   applicationDefault,
@@ -28,6 +30,7 @@ export class AppController {
   constructor(
     private readonly appService: AppService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private readonly fileService: FileService,
   ) {}
 
   @Get('hi')
@@ -49,9 +52,11 @@ export class AppController {
   ) {
     let data: string = '';
     // console.log(`DogId: ${await this.cacheManager.get('dogId')}`);
-    const dogId =
-      ((await this.cacheManager.get('dogId')) as string) ??
-      '68koHQBo46DErlaJJrNf';
+    // const dogId =
+    //   ((await this.cacheManager.get('dogId')) as string) ??
+    //   '68koHQBo46DErlaJJrNf';
+
+    const dogId = this.fileService.getData();
 
     console.log(dogId);
     console.log(
@@ -105,9 +110,11 @@ export class AppController {
 
   @Post('changeDogId')
   async changeDogId(@Query('dogId') dogId: string) {
-    console.log(await this.cacheManager.get('dogId'));
-    await this.cacheManager.set('dogId', dogId, 0);
-    console.log(await this.cacheManager.get('dogId'));
+    console.log(this.fileService.getData());
+    this.fileService.saveData(dogId);
+    // await this.cacheManager.set('dogId', dogId, 0);
+    console.log(this.fileService.getData());
+    // console.log(await this.cacheManager.getData('dogId'));
     return dogId;
   }
 }
