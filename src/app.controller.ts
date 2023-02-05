@@ -52,6 +52,13 @@ export class AppController {
     const dogId =
       ((await this.cacheManager.get('dogId')) as string) ??
       '68koHQBo46DErlaJJrNf';
+
+    console.log(dogId);
+    console.log(
+      `${hour < 10 ? '0' : ''}${hour}:${minute < 10 ? '0' : ''}${minute}:${
+        second < 10 ? '0' : ''
+      }${second}`,
+    );
     await admin
       .firestore()
       .collection('record')
